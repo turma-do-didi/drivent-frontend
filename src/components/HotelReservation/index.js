@@ -1,8 +1,7 @@
 import { Typography } from '@material-ui/core';
 import styled from 'styled-components';
 import useHotels from '../../hooks/api/useHotel';
-import { BlockedBookingMessageWrapper } from './BlockedBookingMessageWrapper';
-import blockedBookingMessage from './blockedBookingMessage';
+import BlockedBooking from './BlockedBookingMessageWrapper';
 
 export default function HotelReservation() {
   const hotel = useHotels();
@@ -12,9 +11,7 @@ export default function HotelReservation() {
   function hotelContent() {
     if (hotel.hotelsError) {
       return (
-        <BlockedBookingMessageWrapper>
-          <h1>{blockedBookingMessage(hotel.hotelsError.response.data)}</h1>
-        </BlockedBookingMessageWrapper>
+        <BlockedBooking error={hotel.hotelsError} />
       );
     }
   }

@@ -1,13 +1,22 @@
 import styled from 'styled-components';
+import { blockedBookingMessage } from '../../utils/hotelUtils';
 
-export const BlockedBookingMessageWrapper = styled.div`
+export default function BlockedBooking({ error }) {
+  return (
+    <BlockedBookingMessageWrapper>
+      <h1>{blockedBookingMessage(error.response.data)}</h1>
+    </BlockedBookingMessageWrapper>
+  );
+}
+
+// FIX NA FONTE
+
+const BlockedBookingMessageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 90%;
-  background-color: aliceblue;
-  box-sizing: border-box;
   > h1 {
     width: 411px;
     color: #8E8E8E;
