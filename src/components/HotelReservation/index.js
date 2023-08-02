@@ -7,8 +7,6 @@ import HotelListing from './HotelListing';
 export default function HotelReservation() {
   const hotel = useHotels();
 
-  console.log(hotel);
-
   function hotelContent() {
     if (hotel.hotelsError) {
       return (
@@ -30,5 +28,5 @@ export default function HotelReservation() {
 }
 
 const StyledTypography = styled(Typography)`
-  margin-bottom: 20px!important;
+  margin-bottom: 20px !important;
 `;
