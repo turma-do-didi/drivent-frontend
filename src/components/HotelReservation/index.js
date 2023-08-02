@@ -6,24 +6,23 @@ import BlockedBooking from './BlockedBookingMessageWrapper';
 export default function HotelReservation() {
   const hotel = useHotels();
 
-  console.log(hotel);
-
   function hotelContent() {
     if (hotel.hotelsError) {
-      return (
-        <BlockedBooking error={hotel.hotelsError} />
-      );
+      return <BlockedBooking error={hotel.hotelsError} />;
     }
   }
 
   return (
     <>
-      <StyledTypography StyledTypography variant='h4' > Escolha de hotel e quarto</StyledTypography >
+      <StyledTypography StyledTypography variant="h4">
+        {' '}
+        Escolha de hotel e quarto
+      </StyledTypography>
       {hotelContent()}
     </>
   );
 }
 
 const StyledTypography = styled(Typography)`
-  margin-bottom: 20px!important;
+  margin-bottom: 20px !important;
 `;
