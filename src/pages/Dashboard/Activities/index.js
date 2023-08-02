@@ -11,7 +11,7 @@ export default function Activities() {
       <StyledTypography variant="h4">Escolha de atividades</StyledTypography>
       {dates.datesError && (
         <BlockedListActivitiesMessageContainer>
-          <h1>{blockedListActivityMessage(dates.datesError.response.data)}</h1>
+          {blockedListActivityMessage(dates.datesError.response.data)}
         </BlockedListActivitiesMessageContainer>
       )}
     </>
