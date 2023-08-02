@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { blockedBookingMessage } from '../../utils/hotelUtils';
+import { Typography } from '@material-ui/core';
 
 export default function BlockedBooking({ error }) {
   return (
     <BlockedBookingMessageWrapper>
-      <h1>{blockedBookingMessage(error.response.data)}</h1>
+      <StyledTypography variant='h5' color='textSecondary' align='center' >{blockedBookingMessage(error.response.data)}</StyledTypography>
     </BlockedBookingMessageWrapper>
   );
 }
@@ -17,20 +18,10 @@ const BlockedBookingMessageWrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 90%;
-  > h1 {
-    width: 411px;
-    color: #8E8E8E;
-    text-align: center;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
+  background-color: aliceblue;
+`;
 
-  @media (max-width: 600px) {
-    > div {
-      width: 100%;
-      padding-left: 0px !important;
-    }
-  }
+const StyledTypography = styled(Typography)`
+  margin-bottom: 20px!important;
+  max-width: 464px;
 `;
