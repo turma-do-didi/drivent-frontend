@@ -17,3 +17,15 @@ export async function getLocations(token) {
   });
   return response.data;
 }
+
+export async function getActivities(token, date) {
+  const response = await api.get('/activity/', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      date: date,
+    },
+  });
+  return response.data;
+}

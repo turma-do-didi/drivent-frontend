@@ -40,3 +40,12 @@ export function useLocations() {
     getLocations,
   };
 }
+
+export async function useActivities(token, date) {
+  try {
+    const activities = await activityApi.getActivities(token, date);
+    return activities;
+  } catch {
+    return 'An error occurred while trying to fetch the activities';
+  }
+}

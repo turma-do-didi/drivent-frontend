@@ -1,25 +1,60 @@
-import { useActivityDates, useLocations } from '../../../hooks/api/useActivity';
+import { useActivities, useActivityDates, useLocations } from '../../../hooks/api/useActivity';
 import { Typography } from '@material-ui/core';
 import { blockedListActivityMessage } from '../../../utils/activityUtils';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import 'dayjs/locale/pt-br';
 import { useState } from 'react';
+import useToken from '../../../hooks/useToken';
+import utc from 'dayjs/plugin/utc';
+import SubscriptionIcon from '../../../assets/images/subscription-icon.svg';
+import SoldOutIcon from '../../../assets/images/sold-out-icon.svg';
 
 export default function Activities() {
   const dates = useActivityDates();
   const locations = useLocations();
+  const token = useToken();
   const [selectedDate, setSelectedDate] = useState(null);
+  const [activities, setActivities] = useState([]);
+  dayjs.extend(utc);
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
+    useActivities(token, date.activityDate)
+      .then((activities) => {
+        setActivities(activities);
+      })
+      .catch((_error) => {
+        setActivities([]);
+      });
   };
 
   function formatDateToCustomFormat(dateString) {
-    dayjs.locale('pt-br');
-    const dateObject = dayjs(dateString);
+    const dateObject = dayjs.utc(dateString);
     const formattedDate = dateObject.format('dddd, DD/MM');
     return formattedDate;
+  }
+
+  function calculateHourDifference(dateString1, dateString2) {
+    const date1 = new Date(dateString1);
+    const date2 = new Date(dateString2);
+
+    const differenceInMillis = Math.abs(date1 - date2);
+    const differenceInHours = differenceInMillis / 3600000;
+
+    return (80 * differenceInHours + 10 * (differenceInHours - 1)).toString() + 'px';
+  }
+
+  function extractHourFromDate(dateTimeString) {
+    const dateObj = dayjs.utc(dateTimeString);
+    const hourString = dateObj.format('HH:mm');
+    return hourString;
+  }
+
+  function compareStartTime(a, b) {
+    const startTimeA = new Date(a.startTime).getTime();
+    const startTimeB = new Date(b.startTime).getTime();
+
+    return startTimeA - startTimeB;
   }
 
   return (
@@ -50,7 +85,38 @@ export default function Activities() {
                 locations.locations.map((location, index) => (
                   <div key={index}>
                     <p>{location.name}</p>
-                    <div></div>
+                    <ActivitiesContainer>
+                      {activities.length !== 0 &&
+                        activities.sort(compareStartTime).map(
+                          (activity, index) =>
+                            activity.Location.name === location.name && (
+                              <Activity
+                                key={index}
+                                height={calculateHourDifference(activity.startTime, activity.endTime)}
+                              >
+                                <div>
+                                  <p>{activity.title}</p>
+                                  <p>
+                                    {extractHourFromDate(activity.startTime)} : {extractHourFromDate(activity.endTime)}
+                                  </p>
+                                </div>
+                                <div>
+                                  {activity.vacancies > 0 ? (
+                                    <>
+                                      <img src={SubscriptionIcon} alt="Subscription Button" />
+                                      <TextVacancies color={'#078632'}>{activity.vacancies} vagas</TextVacancies>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <img src={SoldOutIcon} alt="Activity Sold Out" />
+                                      <TextVacancies color={'#CC6666'}>Esgotado</TextVacancies>
+                                    </>
+                                  )}
+                                </div>
+                              </Activity>
+                            )
+                        )}
+                    </ActivitiesContainer>
                   </div>
                 ))}
             </LocationsContainer>
@@ -158,17 +224,85 @@ const LocationsContainer = styled.div`
       line-height: normal;
       margin-bottom: 10px;
     }
+  }
+`;
 
-    > div {
-      width: 290px;
-      height: 390px;
-      border: 1px solid #d7d7d7;
-      overflow: hidden;
-      overflow-y: auto;
+const ActivitiesContainer = styled.div`
+  width: 290px;
+  height: 390px;
+  border: 1px solid #d7d7d7;
+  overflow: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-      ::-webkit-scrollbar {
-        display: none;
-      }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const Activity = styled.div`
+  width: calc(100% - 20px);
+  height: ${(props) => props.height};
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  border-radius: 5px;
+  background: #f1f1f1;
+  flex-shrink: 0;
+
+  > div:nth-of-type(1) {
+    width: 75%;
+    height: calc(100% - 20px);
+    border-right: 1px solid #cfcfcf;
+
+    > p:nth-of-type(1) {
+      width: calc(100% - 20px);
+      color: #343434;
+      font-family: Roboto;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+      margin-left: 10px;
+      margin-bottom: 6px;
+    }
+
+    > p:nth-of-type(2) {
+      color: #343434;
+      font-family: Roboto;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-left: 10px;
     }
   }
+
+  > div:nth-of-type(2) {
+    width: 25%;
+    height: calc(100% - 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    > img {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+  }
+`;
+
+const TextVacancies = styled.p`
+  color: ${(props) => props.color};
+  font-family: Roboto;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 `;
