@@ -1,4 +1,4 @@
-import useActivityDates from '../../../hooks/api/useActivityDates';
+import { useActivityDates, useLocations } from '../../../hooks/api/useActivity';
 import { Typography } from '@material-ui/core';
 import { blockedListActivityMessage } from '../../../utils/activityUtils';
 import styled from 'styled-components';
@@ -8,6 +8,7 @@ import { useState } from 'react';
 
 export default function Activities() {
   const dates = useActivityDates();
+  const locations = useLocations();
   const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateClick = (date) => {
@@ -43,6 +44,17 @@ export default function Activities() {
                 </div>
               ))}
           </DatesContainer>
+          {selectedDate !== null && (
+            <LocationsContainer>
+              {locations.locations !== null &&
+                locations.locations.map((location, index) => (
+                  <div key={index}>
+                    <p>{location.name}</p>
+                    <div></div>
+                  </div>
+                ))}
+            </LocationsContainer>
+          )}
         </>
       )}
     </>
@@ -114,4 +126,49 @@ const DateFilterInstruction = styled.p`
   font-weight: 400;
   line-height: normal;
   margin-bottom: 13px;
+`;
+
+const LocationsContainer = styled.div`
+  width: 100%;
+  height: auto;
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  overflow-x: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+
+    > p {
+      color: #7b7b7b;
+      text-align: center;
+      font-family: Roboto;
+      font-size: 17px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-bottom: 10px;
+    }
+
+    > div {
+      width: 290px;
+      height: 390px;
+      border: 1px solid #d7d7d7;
+      overflow: hidden;
+      overflow-y: auto;
+
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
 `;
