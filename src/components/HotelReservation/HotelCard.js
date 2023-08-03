@@ -8,7 +8,6 @@ export default function HotelCard({ hotel }) {
   const [emptyVacancy, setEmptyVacancy] = useState('Carregando');
   const [roomTypes, setRoomTypes] = useState('Carregando');
 
-  console.log(hotelDetails);
   useEffect(() => {
     if (hotelDetails) {
       setEmptyVacancy(getHotelCapacity(hotelDetails.Rooms));
@@ -40,43 +39,43 @@ const HotelCardContainer = styled.div`
 `;
 
 const HotelPicture = styled.img`
-    width: 168px;
-    height: 109px;
-    border-radius: 5px;
-    background-color: white;
-    margin-bottom: 10px;
+  width: 168px;
+  height: 109px;
+  border-radius: 5px;
+  background-color: white;
+  margin-bottom: 10px;
 `;
 
 const HotelName = styled.h1`
-    color: #343434;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    margin-bottom: 10px;
-    max-width: 168px;
-    max-height: 23px;
-    overflow: hidden;
+  color: #343434;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-bottom: 10px;
+  max-width: 168px;
+  max-height: 23px;
+  overflow: hidden;
 `;
 
 const Title = styled.h2`
-    color: #3C3C3C;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    max-width: 168px;
-    max-height: 14px;
-    margin-bottom: 2px;
+  color: #3c3c3c;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  max-width: 168px;
+  max-height: 14px;
+  margin-bottom: 2px;
 `;
 
 const Content = styled.h3`
-    color: #3C3C3C;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    max-width: 168px;
-    max-height: 14px;
-    margin-bottom: 14px;
+  color: #3c3c3c;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  max-width: 168px;
+  max-height: 14px;
+  margin-bottom: 14px;
 `;
