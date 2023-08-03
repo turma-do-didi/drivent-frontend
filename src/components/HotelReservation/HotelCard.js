@@ -1,23 +1,18 @@
 import styled from 'styled-components';
 import useHotelDetails from '../../hooks/api/useHotelDetails';
 import { useEffect, useState } from 'react';
+import { getHotelCapacity, getRoomTypes } from '../../utils/hotelUtils';
 
 export default function HotelCard({ hotel }) {
   const { hotelDetails } = useHotelDetails(hotel.id);
   const [emptyVacancy, setEmptyVacancy] = useState('Carregando');
+  const [roomTypes, setRoomTypes] = useState('Carregando');
 
   console.log(hotelDetails);
   useEffect(() => {
     if (hotelDetails) {
-      let capacity = 0;
-      hotelDetails.Rooms.forEach(room => {
-        capacity += room.capacity;
-      });
-      let reserved = 0;
-      hotelDetails.Rooms.forEach(room => {
-        reserved += room.Booking.length;
-      });
-      setEmptyVacancy(capacity - reserved);
+      setEmptyVacancy(getHotelCapacity(hotelDetails.Rooms));
+      setRoomTypes(getRoomTypes(hotelDetails.Rooms));
     }
   }, [hotelDetails]);
 
@@ -26,7 +21,7 @@ export default function HotelCard({ hotel }) {
       <HotelPicture src={hotel.image} />
       <HotelName>{hotel.name}</HotelName>
       <Title>Tipos de acomodação:</Title>
-      <Content>single</Content>
+      <Content>{roomTypes}</Content>
       <Title>Vagas disponíveis:</Title>
       <Content>{emptyVacancy}</Content>
     </HotelCardContainer>
@@ -41,6 +36,7 @@ const HotelCardContainer = styled.div`
     padding: 16px 14px;
     box-sizing: border-box;
     margin-right: 20px;
+    margin-bottom: 20px;
 `;
 
 const HotelPicture = styled.img`
