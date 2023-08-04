@@ -3,7 +3,7 @@ import useHotelDetails from '../../hooks/api/useHotelDetails';
 import { useEffect, useState } from 'react';
 import { getHotelCapacity, getRoomTypes } from '../../utils/hotelUtils';
 
-export default function HotelCard({ hotel }) {
+export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setSelectedRoom }) {
   const { hotelDetails } = useHotelDetails(hotel.id);
   const [emptyVacancy, setEmptyVacancy] = useState('Carregando');
   const [roomTypes, setRoomTypes] = useState('Carregando');
@@ -15,8 +15,22 @@ export default function HotelCard({ hotel }) {
     }
   }, [hotelDetails]);
 
+  const selectCard = () => {
+    setSelectedHotel(hotelDetails);
+    if(selectedHotel && hotel.id !== selectedHotel.id) {
+      setSelectedRoom(null);
+    }
+  };
+
+  const cardColor = () => {
+    if (selectedHotel && selectedHotel.id === hotel.id) {
+      return '#FFEED2';
+    } 
+    return '#EBEBEB';
+  };
+
   return (
-    <HotelCardContainer>
+    <HotelCardContainer onClick={selectCard} cardColor={cardColor} >
       <HotelPicture src={hotel.image} />
       <HotelName>{hotel.name}</HotelName>
       <Title>Tipos de acomodação:</Title>
@@ -31,7 +45,7 @@ const HotelCardContainer = styled.div`
     width: 196px;
     height: 264px;
     border-radius: 10px;
-    background-color: #EBEBEB;
+    background-color: ${props => props.cardColor};
     padding: 16px 14px;
     box-sizing: border-box;
     margin-right: 20px;
