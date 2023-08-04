@@ -4,6 +4,7 @@ import useHotels from '../../hooks/api/useHotel';
 import BlockedBooking from './BlockedBooking';
 import HotelListing from './HotelListing';
 import { useState } from 'react';
+import RoomListing from './RoomListing';
 
 export default function HotelReservation() {
   const hotel = useHotels();
@@ -16,7 +17,10 @@ export default function HotelReservation() {
       );
     } else if(!hotel.hotelsError) {
       return (
-        <HotelListing hotelList={hotel.hotels} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />
+        <>
+          <HotelListing hotelList={hotel.hotels} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} />
+          {selectedHotel ? <RoomListing rooms={selectedHotel.Rooms} /> : null}
+        </>
       );
     }
   }

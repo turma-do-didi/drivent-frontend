@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const HotelsContainer = styled.div`
+export const RoomsContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
 `;

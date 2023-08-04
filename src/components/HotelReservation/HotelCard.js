@@ -16,7 +16,7 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel }) {
   }, [hotelDetails]);
 
   const selectCard = () => {
-    setSelectedHotel(hotel);
+    setSelectedHotel(hotelDetails);
   };
 
   const cardColor = () => {
