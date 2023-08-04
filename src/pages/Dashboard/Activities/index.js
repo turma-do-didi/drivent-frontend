@@ -1,4 +1,10 @@
-import { useActivities, useActivityDates, useCreateSubscription, useLocations } from '../../../hooks/api/useActivity';
+import {
+  useActivities,
+  useActivityDates,
+  useCreateSubscription,
+  useDeleteSubscription,
+  useLocations,
+} from '../../../hooks/api/useActivity';
 import { Typography } from '@material-ui/core';
 import { blockedListActivityMessage } from '../../../utils/activityUtils';
 import styled from 'styled-components';
@@ -69,31 +75,39 @@ export default function Activities() {
     );
   }
 
-  function subscription(activityIndex) {
-    setActivities((prevActivities) => {
-      const updatedActivities = [...prevActivities];
-      const activity = updatedActivities.sort(compareStartTime)[activityIndex];
-
-      const isAlreadySubscribed = updatedActivities.some((otherActivity) => {
-        return (
-          otherActivity.isSubscribed === true &&
-          isTimeOverlap(activity.startTime, activity.endTime, otherActivity.startTime, otherActivity.endTime)
-        );
-      });
-
-      if (isAlreadySubscribed) {
-        toast('Você já está inscrito em uma atividade no mesmo horário.');
-      } else {
-        activity.isSubscribed = true;
-        useCreateSubscription(token, activity.id).catch((_error) => {
-          activity.isSubscribed = false;
-          setActivities([...updatedActivities]);
-          toast('Ocorreu um erro ao tentar se inscrever nessa atividade. Por favor, tente novamente!');
-        });
-      }
-
-      return updatedActivities;
+  function subscription(activity) {
+    const isAlreadySubscribed = activities.some((otherActivity) => {
+      return (
+        otherActivity.isSubscribed === true &&
+        isTimeOverlap(activity.startTime, activity.endTime, otherActivity.startTime, otherActivity.endTime)
+      );
     });
+
+    if (isAlreadySubscribed) {
+      toast('Você já está inscrito em uma atividade no mesmo horário.');
+    } else {
+      activity.isSubscribed = true;
+      useCreateSubscription(token, activity.id).catch((_error) => {
+        activity.isSubscribed = false;
+        setActivities([...activities]);
+        toast('Ocorreu um erro ao tentar se inscrever nessa atividade. Por favor, tente novamente!');
+      });
+    }
+    setActivities([...activities]);
+  }
+
+  function deleteSubscription(activity) {
+    activity.isSubscribed = false;
+    useDeleteSubscription(token, activity.id)
+      .then((_res) => {
+        setActivities([...activities]);
+      })
+      .catch((_error) => {
+        activity.isSubscribed = true;
+        setActivities([...activities]);
+        toast('Ocorreu um erro ao tentar cancelar a sua inscrição nessa atividade. Por favor, tente novamente!');
+      });
+    setActivities([...activities]);
   }
 
   return (
@@ -143,7 +157,11 @@ export default function Activities() {
                                 <div>
                                   {activity.isSubscribed ? (
                                     <>
-                                      <img src={CheckIcon} alt="Subscription Confirm" />
+                                      <img
+                                        src={CheckIcon}
+                                        alt="Subscription Confirm"
+                                        onClick={() => deleteSubscription(activity)}
+                                      />
                                       <TextVacancies color={'#078632'}>Inscrito</TextVacancies>
                                     </>
                                   ) : activity.vacancies > 0 ? (
@@ -151,7 +169,7 @@ export default function Activities() {
                                       <img
                                         src={SubscriptionIcon}
                                         alt="Subscription Button"
-                                        onClick={() => subscription(index)}
+                                        onClick={() => subscription(activity)}
                                       />
                                       <TextVacancies color={'#078632'}>{activity.vacancies} vagas</TextVacancies>
                                     </>

@@ -57,3 +57,11 @@ export async function useCreateSubscription(token, activityId) {
     throw new Error('An error occurred while trying to post new subscription');
   }
 }
+
+export async function useDeleteSubscription(token, activityId) {
+  try {
+    await activityApi.deleteSubscription(token, activityId);
+  } catch {
+    throw new Error('An error occurred while trying to delete a subscription');
+  }
+}
