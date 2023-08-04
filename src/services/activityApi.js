@@ -29,3 +29,18 @@ export async function getActivities(token, date) {
   });
   return response.data;
 }
+
+export async function postSubscription(token, activityId) {
+  const response = await api.post(
+    '/activity/subscriptions',
+    {
+      activityId: activityId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+}
