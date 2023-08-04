@@ -1,13 +1,22 @@
-import { useActivities, useActivityDates, useLocations } from '../../../hooks/api/useActivity';
+import {
+  useActivities,
+  useActivityDates,
+  useCreateSubscription,
+  useDeleteSubscription,
+  useLocations,
+} from '../../../hooks/api/useActivity';
 import { Typography } from '@material-ui/core';
 import { blockedListActivityMessage } from '../../../utils/activityUtils';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 import { useState } from 'react';
 import useToken from '../../../hooks/useToken';
 import utc from 'dayjs/plugin/utc';
 import SubscriptionIcon from '../../../assets/images/subscription-icon.svg';
 import SoldOutIcon from '../../../assets/images/sold-out-icon.svg';
+import CheckIcon from '../../../assets/images/check-icon.svg';
+import { toast } from 'react-toastify';
 
 export default function Activities() {
   const dates = useActivityDates();
@@ -29,6 +38,7 @@ export default function Activities() {
   };
 
   function formatDateToCustomFormat(dateString) {
+    dayjs.locale('pt-br');
     const dateObject = dayjs.utc(dateString);
     const formattedDate = dateObject.format('dddd, DD/MM');
     return formattedDate;
@@ -55,6 +65,49 @@ export default function Activities() {
     const startTimeB = new Date(b.startTime).getTime();
 
     return startTimeA - startTimeB;
+  }
+
+  function isTimeOverlap(time1Start, time1End, time2Start, time2End) {
+    return (
+      (time1Start >= time2Start && time1Start < time2End) ||
+      (time1End > time2Start && time1End <= time2End) ||
+      (time1Start <= time2Start && time1End >= time2End)
+    );
+  }
+
+  function subscription(activity) {
+    const isAlreadySubscribed = activities.some((otherActivity) => {
+      return (
+        otherActivity.isSubscribed === true &&
+        isTimeOverlap(activity.startTime, activity.endTime, otherActivity.startTime, otherActivity.endTime)
+      );
+    });
+
+    if (isAlreadySubscribed) {
+      toast('Você já está inscrito em uma atividade no mesmo horário.');
+    } else {
+      activity.isSubscribed = true;
+      useCreateSubscription(token, activity.id).catch((_error) => {
+        activity.isSubscribed = false;
+        setActivities([...activities]);
+        toast('Ocorreu um erro ao tentar se inscrever nessa atividade. Por favor, tente novamente!');
+      });
+    }
+    setActivities([...activities]);
+  }
+
+  function deleteSubscription(activity) {
+    activity.isSubscribed = false;
+    useDeleteSubscription(token, activity.id)
+      .then((_res) => {
+        setActivities([...activities]);
+      })
+      .catch((_error) => {
+        activity.isSubscribed = true;
+        setActivities([...activities]);
+        toast('Ocorreu um erro ao tentar cancelar a sua inscrição nessa atividade. Por favor, tente novamente!');
+      });
+    setActivities([...activities]);
   }
 
   return (
@@ -93,6 +146,7 @@ export default function Activities() {
                               <Activity
                                 key={index}
                                 height={calculateHourDifference(activity.startTime, activity.endTime)}
+                                color={activity.isSubscribed ? '#D0FFDB' : '#F1F1F1'}
                               >
                                 <div>
                                   <p>{activity.title}</p>
@@ -101,9 +155,22 @@ export default function Activities() {
                                   </p>
                                 </div>
                                 <div>
-                                  {activity.vacancies > 0 ? (
+                                  {activity.isSubscribed ? (
                                     <>
-                                      <img src={SubscriptionIcon} alt="Subscription Button" />
+                                      <img
+                                        src={CheckIcon}
+                                        alt="Subscription Confirm"
+                                        onClick={() => deleteSubscription(activity)}
+                                      />
+                                      <TextVacancies color={'#078632'}>Inscrito</TextVacancies>
+                                    </>
+                                  ) : activity.vacancies > 0 ? (
+                                    <>
+                                      <img
+                                        src={SubscriptionIcon}
+                                        alt="Subscription Button"
+                                        onClick={() => subscription(activity)}
+                                      />
                                       <TextVacancies color={'#078632'}>{activity.vacancies} vagas</TextVacancies>
                                     </>
                                   ) : (
@@ -249,7 +316,7 @@ const Activity = styled.div`
   align-items: center;
   margin-top: 10px;
   border-radius: 5px;
-  background: #f1f1f1;
+  background: ${(props) => props.color};
   flex-shrink: 0;
 
   > div:nth-of-type(1) {

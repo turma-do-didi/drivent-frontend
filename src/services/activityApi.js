@@ -29,3 +29,30 @@ export async function getActivities(token, date) {
   });
   return response.data;
 }
+
+export async function postSubscription(token, activityId) {
+  const response = await api.post(
+    '/activity/subscriptions',
+    {
+      activityId: activityId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+}
+
+export async function deleteSubscription(token, activityId) {
+  const response = await api.delete('/activity/subscriptions', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      activityId: activityId,
+    },
+  });
+  return response.data;
+}

@@ -46,6 +46,22 @@ export async function useActivities(token, date) {
     const activities = await activityApi.getActivities(token, date);
     return activities;
   } catch {
-    return 'An error occurred while trying to fetch the activities';
+    throw new Error('An error occurred while trying to fetch the activities');
+  }
+}
+
+export async function useCreateSubscription(token, activityId) {
+  try {
+    await activityApi.postSubscription(token, activityId);
+  } catch {
+    throw new Error('An error occurred while trying to post new subscription');
+  }
+}
+
+export async function useDeleteSubscription(token, activityId) {
+  try {
+    await activityApi.deleteSubscription(token, activityId);
+  } catch {
+    throw new Error('An error occurred while trying to delete a subscription');
   }
 }
