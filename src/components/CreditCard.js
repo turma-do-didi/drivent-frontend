@@ -47,12 +47,9 @@ export default function PaymentForm({ reservationTicketId, postPayment }) {
       },
     };
 
-    console.log(state.expiry);
-
     try {
       await postPayment(data);
     } catch (err) {
-      console.log('Error submitting reservation: ', err);
       toast('Não foi possível efetuar o pagamento!');
     }
   }

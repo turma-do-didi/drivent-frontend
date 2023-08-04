@@ -42,15 +42,11 @@ export default function Payment() {
       ticketTypeId: selectedTicketId,
     };
 
-    console.log('Submitting reservation...');
-
     try {
       await postReservation(data);
-      console.log('Reservation submitted successfully');
       setReservationHasClicked(true);
       toast('Ingresso reservado com sucesso!');
     } catch (err) {
-      console.log('Error submitting reservation: ', err);
       toast('Não foi possível salvar suas informações!');
     }
   }
