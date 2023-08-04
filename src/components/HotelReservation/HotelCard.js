@@ -3,7 +3,7 @@ import useHotelDetails from '../../hooks/api/useHotelDetails';
 import { useEffect, useState } from 'react';
 import { getHotelCapacity, getRoomTypes } from '../../utils/hotelUtils';
 
-export default function HotelCard({ hotel, setSelectedHotel, selectedHotel }) {
+export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setSelectedRoom }) {
   const { hotelDetails } = useHotelDetails(hotel.id);
   const [emptyVacancy, setEmptyVacancy] = useState('Carregando');
   const [roomTypes, setRoomTypes] = useState('Carregando');
@@ -17,6 +17,9 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel }) {
 
   const selectCard = () => {
     setSelectedHotel(hotelDetails);
+    if(selectedHotel && hotel.id !== selectedHotel.id) {
+      setSelectedRoom(null);
+    }
   };
 
   const cardColor = () => {
