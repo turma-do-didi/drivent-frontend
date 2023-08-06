@@ -17,7 +17,7 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setS
 
   const selectCard = () => {
     setSelectedHotel(hotelDetails);
-    if(selectedHotel && hotel.id !== selectedHotel.id) {
+    if (selectedHotel && hotel.id !== selectedHotel.id) {
       setSelectedRoom(null);
     }
   };
@@ -25,12 +25,12 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setS
   const cardColor = () => {
     if (selectedHotel && selectedHotel.id === hotel.id) {
       return '#FFEED2';
-    } 
+    }
     return '#EBEBEB';
   };
 
   return (
-    <HotelCardContainer onClick={selectCard} cardColor={cardColor} >
+    <HotelCardContainer onClick={selectCard} cardColor={cardColor}>
       <HotelPicture src={hotel.image} />
       <HotelName>{hotel.name}</HotelName>
       <Title>Tipos de acomodação:</Title>
@@ -42,14 +42,15 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setS
 }
 
 const HotelCardContainer = styled.div`
-    width: 196px;
-    height: 264px;
-    border-radius: 10px;
-    background-color: ${props => props.cardColor};
-    padding: 16px 14px;
-    box-sizing: border-box;
-    margin-right: 20px;
-    margin-bottom: 20px;
+  width: 196px;
+  height: 264px;
+  border-radius: 10px;
+  background-color: ${(props) => props.cardColor};
+  padding: 16px 14px;
+  box-sizing: border-box;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
 `;
 
 const HotelPicture = styled.img`
