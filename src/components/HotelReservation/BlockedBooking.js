@@ -5,7 +5,9 @@ import { Typography } from '@material-ui/core';
 export default function BlockedBooking({ error }) {
   return (
     <BlockedBookingMessageWrapper>
-      <StyledTypography variant='h5' color='textSecondary' align='center' >{blockedBookingMessage(error.response.data)}</StyledTypography>
+      <StyledTypography variant="h5" color="textSecondary" align="center">
+        {blockedBookingMessage(error.response.data)}
+      </StyledTypography>
     </BlockedBookingMessageWrapper>
   );
 }
@@ -17,11 +19,17 @@ const BlockedBookingMessageWrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 90%;
-  background-color: aliceblue;
+  height: 89%;
 `;
 
 const StyledTypography = styled(Typography)`
-  margin-bottom: 20px!important;
-  max-width: 464px;
+  > h1 {
+    color: #8e8e8e;
+    text-align: center;
+    font-family: Roboto;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 `;

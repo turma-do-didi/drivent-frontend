@@ -64,10 +64,13 @@ export default function PaymentForm({ reservationTicketId, postPayment }) {
     }
     const clearValue = clearNumber(value);
 
-    const formattedValue = `${clearValue.slice(0, 4)} ${clearValue.slice(4, 8)} ${clearValue.slice(
-      8,
-      12
-    )} ${clearValue.slice(12, 19)}`;
+    let formattedValue = '';
+    for (let i = 0; i < clearValue.length; i++) {
+      if (i > 0 && i % 4 === 0) {
+        formattedValue += ' ';
+      }
+      formattedValue += clearValue[i];
+    }
 
     return formattedValue;
   }
@@ -113,13 +116,15 @@ export default function PaymentForm({ reservationTicketId, postPayment }) {
           <Cards number={state.number} expiry={state.expiry} cvc={state.cvc} name={state.name} focused={state.focus} />
           <Form ref={formRef}>
             <input
-              type="tel"
+              type="text"
               name="number"
               placeholder="Número do Cartão"
               value={state.number}
               required
               onChange={handleInputChange}
               onFocus={handleInputFocus}
+              maxLength="19"
+              pattern="[0-9 ]*"
             />
 
             <input
@@ -176,15 +181,21 @@ const Form = styled.form`
   margin-left: 20px;
   height: 100%;
   justify-content: space-between;
+
   > input {
     width: 400px;
     border-radius: 5px;
     border: 1px solid #8e8e8e;
     height: 45px;
-    padding-left: 5px;
+    padding-left: 10px;
 
-    &::placeholder {
-      padding-left: 5px;
+    &:hover {
+      border: 1px solid #212121;
+    }
+
+    &:focus {
+      outline: none !important;
+      border: 2px solid #3f51b5;
     }
   }
 
@@ -197,10 +208,15 @@ const Form = styled.form`
       border: none;
       height: 45px;
       border: 1px solid #8e8e8e;
-      padding-left: 5px;
+      padding-left: 10px;
 
-      &::placeholder {
-        padding-left: 5px;
+      &:hover {
+        border: 1px solid #212121;
+      }
+
+      &:focus {
+        outline: none !important;
+        border: 2px solid #3f51b5;
       }
     }
 
