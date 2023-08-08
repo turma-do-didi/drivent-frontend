@@ -6,6 +6,7 @@ import HotelListing from './HotelListing';
 import { useState } from 'react';
 import RoomListing from './RoomListing';
 import useBooking from '../../hooks/api/useBooking';
+import BookingResume from './BookinngResume';
 
 export default function HotelReservation() {
   const { booking } = useBooking();
@@ -13,7 +14,7 @@ export default function HotelReservation() {
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
-  console.log(booking);
+  console.log(hotel.hotels);
 
   function hotelContent() {
     if (hotel.hotelsError) {
@@ -28,9 +29,12 @@ export default function HotelReservation() {
         </>
       );
     } else if (!hotel.hotelsError && booking) {
-      return (
-        <h1>Quem ja tem reserva cai aq</h1>
-      );
+      if(hotel.hotels) {
+        const reservedHotel = hotel.hotels.find((hotel) => hotel.id === booking.Room.hotelId);
+        return (
+          <BookingResume hotel={reservedHotel}/>
+        );
+      }
     }
   }
 
