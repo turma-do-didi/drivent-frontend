@@ -6,7 +6,7 @@ import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 
-export default function PaymentForm({ reservationTicketId, postPayment }) {
+export default function PaymentForm({ reservationTicketId, postPayment, getUserTicket }) {
   const [state, setState] = useState({
     number: '',
     expiry: '',
@@ -49,6 +49,7 @@ export default function PaymentForm({ reservationTicketId, postPayment }) {
 
     try {
       await postPayment(data);
+      await getUserTicket();
     } catch (err) {
       toast('Não foi possível efetuar o pagamento!');
     }
