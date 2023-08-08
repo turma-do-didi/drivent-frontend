@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import useTicket from '../../../hooks/api/useTicket.js';
+import useTicketTypes from '../../../hooks/api/useTicketTypes.js';
 import { Typography } from '@material-ui/core';
 import useEnrollment from '../../../hooks/api/useEnrollment.js';
 import { useState } from 'react';
@@ -9,9 +9,11 @@ import PaymentForm from '../../../components/CreditCard.js';
 import usePayment from '../../../hooks/api/usePayment.js';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { IconContext } from 'react-icons';
+import useUserTicket from '../../../hooks/api/useUserTicket.js';
 
 export default function Payment() {
-  const { tickets } = useTicket();
+  const { ticketTypes } = useTicketTypes();
+  const { getUserTicket, userTicket } = useUserTicket();
   const { enrollment } = useEnrollment();
   const [selectedTicketType, setSelectedTicketType] = useState(null);
   const [selectedAccommodation, setSelectedAccommodation] = useState(null);
@@ -21,6 +23,8 @@ export default function Payment() {
   const { paymentConfirmation, postPayment } = usePayment();
 
   const isInPerson = 0;
+
+  console.log(userTicket);
 
   function handleTicketType(id) {
     setSelectedTicketType(id);
@@ -42,11 +46,16 @@ export default function Payment() {
       ticketTypeId: selectedTicketId,
     };
 
+    console.log('Submitting reservation...');
+
     try {
       await postReservation(data);
+      console.log('Reservation submitted successfully');
+      await getUserTicket()
       setReservationHasClicked(true);
       toast('Ingresso reservado com sucesso!');
     } catch (err) {
+      console.log('Error submitting reservation: ', err);
       toast('Não foi possível salvar suas informações!');
     }
   }
@@ -54,8 +63,8 @@ export default function Payment() {
   let ticketResume;
   let reservationTicketId;
 
-  if (reservationResume) {
-    const { TicketType: ticketType, id } = reservationResume;
+  if (userTicket) {
+    const { TicketType: ticketType, id } = userTicket;
 
     const statusParts = [];
     if (ticketType.isRemote) {
@@ -82,8 +91,8 @@ export default function Payment() {
   let ticketsTypeWithIdZero;
   let priceInPersonWithoutHotel;
   let totalPrice;
-  if (tickets) {
-    ticketsType = tickets.filter(
+  if (ticketTypes) {
+    ticketsType = ticketTypes.filter(
       (ticket) => (ticket.isRemote === false && ticket.includesHotel === false) || ticket.isRemote === true
     );
 
@@ -97,18 +106,18 @@ export default function Payment() {
       });
     }
 
-    accommodationType = tickets.filter((ticket) => ticket.isRemote === false);
+    accommodationType = ticketTypes.filter((ticket) => ticket.isRemote === false);
 
-    priceInPersonWithoutHotel = tickets.find(
+    priceInPersonWithoutHotel = ticketTypes.find(
       (ticket) => ticket.isRemote === false && ticket.includesHotel === false
     )?.price;
 
-    totalPrice = tickets.find((ticket) => ticket.id === selectedTicketId)?.price;
+    totalPrice = ticketTypes.find((ticket) => ticket.id === selectedTicketId)?.price;
   }
 
   return (
     <>
-      {!reservationHasClicked && (
+      {!reservationHasClicked && !userTicket && (
         <>
           <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
 
@@ -174,7 +183,7 @@ export default function Payment() {
         </>
       )}
 
-      {reservationHasClicked && (
+      {(reservationHasClicked || userTicket) && (
         <>
           <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
 
@@ -190,11 +199,11 @@ export default function Payment() {
 
               <Subtitle>Pagamento</Subtitle>
               <CreditCardContainer>
-                {!paymentConfirmation && (
-                  <PaymentForm reservationTicketId={reservationTicketId} postPayment={postPayment} />
+                {(userTicket.status === 'RESERVED') && (
+                  <PaymentForm reservationTicketId={reservationTicketId} postPayment={postPayment} getUserTicket={getUserTicket}/>
                 )}
               </CreditCardContainer>
-              {paymentConfirmation && (
+              {userTicket.status === 'PAID' && (
                 <IconContext.Provider value={{ color: '#36B853', size: '3em', className: 'global-class-name' }}>
                   <ConfirmedPaymentContainer>
                     <BsFillCheckCircleFill />
