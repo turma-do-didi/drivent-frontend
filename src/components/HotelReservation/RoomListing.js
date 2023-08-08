@@ -4,9 +4,14 @@ import { RoomsContainer } from './RoomsContainer';
 import RoomCard from './RoomCard';
 import useSaveBooking from '../../hooks/api/useSaveBooking';
 import { toast } from 'react-toastify';
+import useUpdateBooking from '../../hooks/api/useUpdateRoom';
+import { useNavigate } from 'react-router-dom';
 
-export default function RoomListing({ rooms, selectedRoom, setSelectedRoom }) {
+export default function RoomListing({ rooms, selectedRoom, setSelectedRoom, changingRoom, setChangingRoom, getBooking }) {
   const { saveBookingLoading, saveBooking } = useSaveBooking();
+  const { updateBookingLoading, updateBooking } = useUpdateBooking();
+
+  const navigate = useNavigate();
 
   const renderRoomList = () => {
     if (rooms) {
@@ -26,9 +31,20 @@ export default function RoomListing({ rooms, selectedRoom, setSelectedRoom }) {
 
   async function bookRoom() {
     try {
-      await saveBooking({ roomId: selectedRoom.id }, selectedRoom.capacity);
+      await saveBooking({ roomId: selectedRoom.id });
+      getBooking();
     } catch (err) {
       toast('Não foi possível reservar o quarto!');
+    }
+  }
+
+  async function changeRoom() {
+    try  {
+      await updateBooking({ roomId: selectedRoom.id }, selectedRoom.capacity);
+      getBooking();
+      setChangingRoom(false);
+    } catch (err) {
+      toast('Não foi possível alterar o quarto!');
     }
   }
 
@@ -40,7 +56,7 @@ export default function RoomListing({ rooms, selectedRoom, setSelectedRoom }) {
       <RoomsContainer>{renderRoomList()}</RoomsContainer>
       {/* FIXME: ESTA PPERMITINDO O USUARIO RESERVAR MULTIPLAS VEZES - SPINT 2 */}
       {selectedRoom ? (
-        <ReserveRoomButton disabled={saveBookingLoading} onClick={bookRoom}>
+        <ReserveRoomButton disabled={saveBookingLoading || updateBookingLoading} onClick={changingRoom ? changeRoom : bookRoom}>
           RESERVAR QUARTO
         </ReserveRoomButton>
       ) : null}

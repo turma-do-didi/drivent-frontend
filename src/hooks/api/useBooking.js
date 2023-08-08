@@ -11,7 +11,7 @@ export default function useBooking() {
     loading: bookingLoading,
     error: bookingError,
     act: getBooking
-  } = useAsync(() => bookingApi.getUserBooking(token));
+  } = useAsync((data) => bookingApi.getUserBooking(token));
 
   return {
     booking,

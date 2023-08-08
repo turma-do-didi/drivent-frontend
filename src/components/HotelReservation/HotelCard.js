@@ -1,17 +1,21 @@
 import styled from 'styled-components';
 import useHotelDetails from '../../hooks/api/useHotelDetails';
 import { useEffect, useState } from 'react';
-import { getHotelCapacity, getRoomTypes } from '../../utils/hotelUtils';
+import { getHotelCapacity, getResevedRoom, getRoomOcuppancy, getRoomTypes } from '../../utils/hotelUtils';
 
-export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setSelectedRoom, resume }) {
+export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setSelectedRoom, resume, booking }) {
   const { hotelDetails } = useHotelDetails(hotel.id);
   const [emptyVacancy, setEmptyVacancy] = useState('Carregando');
   const [roomTypes, setRoomTypes] = useState('Carregando');
-
+  
+  console.log(booking);
   useEffect(() => {
-    if (hotelDetails) {
+    if (hotelDetails && !booking) {
       setEmptyVacancy(getHotelCapacity(hotelDetails.Rooms));
       setRoomTypes(getRoomTypes(hotelDetails.Rooms));
+    } else if (booking) {
+      setEmptyVacancy(getRoomOcuppancy(booking.Room.Booking.length));
+      setRoomTypes(getResevedRoom(booking.Room));
     }
   }, [hotelDetails]);
 
@@ -33,9 +37,9 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setS
     <HotelCardContainer onClick={resume ? null : selectCard} cardColor={cardColor}>
       <HotelPicture src={hotel.image} />
       <HotelName>{hotel.name}</HotelName>
-      <Title>Tipos de acomodação:</Title>
+      <Title>{booking ? 'Quarto reservado' : 'Tipos de acomodação:'}</Title>
       <Content>{roomTypes}</Content>
-      <Title>Vagas disponíveis:</Title>
+      <Title>{booking ? 'Pessoas no seu quarto' : 'Vagas disponíveis:'}</Title>
       <Content>{emptyVacancy}</Content>
     </HotelCardContainer>
   );

@@ -17,3 +17,12 @@ export async function getUserBooking(token) {
   });
   return response.data;
 }
+
+export async function updateBooking(bookingId, body, token) {
+  const response = await api.put(`/booking/${bookingId}`, body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}

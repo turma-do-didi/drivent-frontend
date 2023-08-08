@@ -3,14 +3,18 @@ import styled from 'styled-components';
 import { HotelsContainer } from './HotelsContainer';
 import HotelCard from './HotelCard';
 
-export default function BookingResume({ hotel }) {
+export default function BookingResume({ hotel, setChangingRoom, booking }) {
+  const changeRoom = () => {
+    setChangingRoom(true);
+  };
+
   return (
     <>
       <StyledTypography variant='h5' color='textSecondary'>Você já escolheu seu quarto:</StyledTypography>
       <HotelsContainer>
-        <HotelCard hotel={hotel} resume={true} />
+        <HotelCard hotel={hotel} booking={booking} />
       </HotelsContainer>
-      <ChangeRoomButton>TROCAR DE QUARTO</ChangeRoomButton>
+      <ChangeRoomButton onClick={changeRoom}>TROCAR DE QUARTO</ChangeRoomButton>
     </>
   );
 }
