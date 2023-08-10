@@ -16,6 +16,7 @@ import UserContext from '../../contexts/UserContext';
 import useSignIn from '../../hooks/api/useSignIn';
 import { loginWithGithub } from '../../utils/githubAuth.js';
 import useGithubLogin from '../../hooks/api/useGithubLogin.js';
+import { toast } from 'react-toastify';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -44,7 +45,7 @@ export default function SignIn() {
       toast('Não foi possível fazer o login!');
     }
   }
-  
+
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
       <Row>
