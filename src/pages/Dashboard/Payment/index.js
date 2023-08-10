@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import useTicket from '../../../hooks/api/useTicket.js';
+import { useTicket } from '../../../hooks/api/useTicket.js';
 import { Typography } from '@material-ui/core';
 import useEnrollment from '../../../hooks/api/useEnrollment.js';
 import { useState } from 'react';

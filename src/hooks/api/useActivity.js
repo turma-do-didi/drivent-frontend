@@ -41,6 +41,25 @@ export function useLocations() {
   };
 }
 
+export function useActivitiesDone() {
+  // Hook que armazena o token do usuario
+  const token = useToken();
+
+  const {
+    data: activities,
+    loading: activitiesLoading,
+    error: activitiesError,
+    act: getActivitiesDone,
+  } = useAsync(() => activityApi.getActivitiesDone(token));
+
+  return {
+    activities,
+    activitiesLoading,
+    activitiesError,
+    getActivitiesDone,
+  };
+}
+
 export async function useActivities(token, date) {
   try {
     const activities = await activityApi.getActivities(token, date);
