@@ -44,7 +44,7 @@ export default function SignIn() {
       toast('Não foi possível fazer o login!');
     }
   }
-
+  
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
       <Row>
