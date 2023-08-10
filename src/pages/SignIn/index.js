@@ -28,9 +28,9 @@ export default function SignIn() {
 
   const navigate = useNavigate();
 
-  const toast = 'Login realizado com sucesso!';
+  const toastMessage = 'Login realizado com sucesso!';
 
-  useGithubLogin(setUserData, toast);
+  useGithubLogin(setUserData, toastMessage);
 
   async function submit(event) {
     event.preventDefault();
