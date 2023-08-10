@@ -55,16 +55,15 @@ export function getRoomTypes(rooms) {
 }
 
 export function getResevedRoom(room) {
-  const capacity =  {
+  const capacity = {
     1: 'Single',
     2: 'Double',
-    3: 'Triple'
+    3: 'Triple',
   };
-  
+
   return `${room.name} (${capacity[room.capacity]})`;
 }
 
 export function getRoomOcuppancy(ocupantes) {
-  console.log(ocupantes);
   return `Você ${ocupantes > 1 ? 'e mais' : ''} ${ocupantes > 1 ? ocupantes - 1 : ''} `;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography } from '@material-ui/core';
 import useEvent from '../../../hooks/api/useEvent';
-import { useTicketByUserId } from '../../../hooks/api/useTicket';
+import { useTicketByUserId } from '../../../hooks/api/useTicketTypes';
 import { useActivitiesDone } from '../../../hooks/api/useActivity';
 import BlockedMessage from './BlockedMessage';
 import CertificateLink from './CertificateLink';
