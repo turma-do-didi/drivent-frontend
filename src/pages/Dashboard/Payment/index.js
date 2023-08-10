@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import useTicketTypes from '../../../hooks/api/useTicketTypes.js';
+import { useTicket } from '../../../hooks/api/useTicketTypes';
 import { Typography } from '@material-ui/core';
 import useEnrollment from '../../../hooks/api/useEnrollment.js';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ import { IconContext } from 'react-icons';
 import useUserTicket from '../../../hooks/api/useUserTicket.js';
 
 export default function Payment() {
-  const { ticketTypes } = useTicketTypes();
+  const { ticketTypes } = useTicket();
   const { getUserTicket, userTicket } = useUserTicket();
   const { enrollment } = useEnrollment();
   const [selectedTicketType, setSelectedTicketType] = useState(null);
@@ -23,8 +23,6 @@ export default function Payment() {
   const { paymentConfirmation, postPayment } = usePayment();
 
   const isInPerson = 0;
-
-  console.log(userTicket);
 
   function handleTicketType(id) {
     setSelectedTicketType(id);
@@ -46,16 +44,12 @@ export default function Payment() {
       ticketTypeId: selectedTicketId,
     };
 
-    console.log('Submitting reservation...');
-
     try {
       await postReservation(data);
-      console.log('Reservation submitted successfully');
-      await getUserTicket()
+      await getUserTicket();
       setReservationHasClicked(true);
       toast('Ingresso reservado com sucesso!');
     } catch (err) {
-      console.log('Error submitting reservation: ', err);
       toast('Não foi possível salvar suas informações!');
     }
   }
@@ -199,8 +193,12 @@ export default function Payment() {
 
               <Subtitle>Pagamento</Subtitle>
               <CreditCardContainer>
-                {(userTicket.status === 'RESERVED') && (
-                  <PaymentForm reservationTicketId={reservationTicketId} postPayment={postPayment} getUserTicket={getUserTicket}/>
+                {userTicket.status === 'RESERVED' && (
+                  <PaymentForm
+                    reservationTicketId={reservationTicketId}
+                    postPayment={postPayment}
+                    getUserTicket={getUserTicket}
+                  />
                 )}
               </CreditCardContainer>
               {userTicket.status === 'PAID' && (

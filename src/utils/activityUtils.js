@@ -14,6 +14,9 @@ export function blockedListActivityMessage(error) {
         atividade. Você terá acesso a todas as atividades.
       </h1>
     );
+  }
+  if (error === 'endEvent') {
+    return <h1>O evento já terminou, você não pode mais se inscrever em uma nova atividade.</h1>;
   } else {
     return <h1>Ocorreu um erro! Tente novamente.</h1>;
   }

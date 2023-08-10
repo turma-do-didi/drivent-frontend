@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useHotels from '../../hooks/api/useHotel';
 import BlockedBooking from './BlockedBooking';
 import HotelListing from './HotelListing';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import RoomListing from './RoomListing';
 import useBooking from '../../hooks/api/useBooking';
 import BookingResume from './BookinngResume';
@@ -17,29 +17,39 @@ export default function HotelReservation() {
 
   function hotelContent() {
     if (hotel.hotelsError) {
-      return (
-        <BlockedBooking error={hotel.hotelsError} />
-      );
-    } else if((!hotel.hotelsError && !booking) || changingRoom) {
+      return <BlockedBooking error={hotel.hotelsError} />;
+    } else if ((!hotel.hotelsError && !booking) || changingRoom) {
       return (
         <>
-          <HotelListing hotelList={hotel.hotels} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} setSelectedRoom={setSelectedRoom} />
-          {selectedHotel ? <RoomListing rooms={selectedHotel.Rooms} selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom} changingRoom={changingRoom} setChangingRoom={setChangingRoom} getBooking={getBooking}/> : null}
+          <HotelListing
+            hotelList={hotel.hotels}
+            selectedHotel={selectedHotel}
+            setSelectedHotel={setSelectedHotel}
+            setSelectedRoom={setSelectedRoom}
+          />
+          {selectedHotel ? (
+            <RoomListing
+              rooms={selectedHotel.Rooms}
+              selectedRoom={selectedRoom}
+              setSelectedRoom={setSelectedRoom}
+              changingRoom={changingRoom}
+              setChangingRoom={setChangingRoom}
+              getBooking={getBooking}
+            />
+          ) : null}
         </>
       );
     } else if (!hotel.hotelsError && booking) {
-      if(hotel.hotels) {
+      if (hotel.hotels) {
         const reservedHotel = hotel.hotels.find((hotel) => hotel.id === booking.Room.hotelId);
-        return (
-          <BookingResume hotel={reservedHotel} setChangingRoom={setChangingRoom} booking={booking} />
-        );
+        return <BookingResume hotel={reservedHotel} setChangingRoom={setChangingRoom} booking={booking} />;
       }
     }
   }
 
   return (
     <>
-      <StyledTypography variant='h4' > Escolha de hotel e quarto</StyledTypography >
+      <StyledTypography variant="h4"> Escolha de hotel e quarto</StyledTypography>
       {hotelContent()}
     </>
   );

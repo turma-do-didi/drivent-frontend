@@ -7,8 +7,7 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setS
   const { hotelDetails } = useHotelDetails(hotel.id);
   const [emptyVacancy, setEmptyVacancy] = useState('Carregando');
   const [roomTypes, setRoomTypes] = useState('Carregando');
-  
-  console.log(booking);
+
   useEffect(() => {
     if (hotelDetails && !booking) {
       setEmptyVacancy(getHotelCapacity(hotelDetails.Rooms));
