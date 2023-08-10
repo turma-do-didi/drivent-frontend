@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import useHotels from '../../hooks/api/useHotel';
 import BlockedBooking from './BlockedBooking';
 import HotelListing from './HotelListing';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import RoomListing from './RoomListing';
 import useBooking from '../../hooks/api/useBooking';
 import BookingResume from './BookinngResume';

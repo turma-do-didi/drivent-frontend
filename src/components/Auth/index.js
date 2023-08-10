@@ -55,4 +55,8 @@ export const GithubButton = styled.div`
   > p {
     margin-right: 8px;
   }
+
+  :hover {
+    cursor: pointer;
+  }
 `;

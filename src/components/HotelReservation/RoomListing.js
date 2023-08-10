@@ -11,8 +11,6 @@ export default function RoomListing({ rooms, selectedRoom, setSelectedRoom, chan
   const { saveBookingLoading, saveBooking } = useSaveBooking();
   const { updateBookingLoading, updateBooking } = useUpdateBooking();
 
-  const navigate = useNavigate();
-
   const renderRoomList = () => {
     if (rooms) {
       return rooms

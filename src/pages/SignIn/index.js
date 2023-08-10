@@ -1,5 +1,4 @@
 import { useState, useContext, useEffect } from 'react';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 import AuthLayout from '../../layouts/Auth';
@@ -15,7 +14,8 @@ import EventInfoContext from '../../contexts/EventInfoContext';
 import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
-import axios from 'axios';
+import { loginWithGithub } from '../../utils/githubAuth.js';
+import useGithubLogin from '../../hooks/api/useGithubLogin.js';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -28,32 +28,9 @@ export default function SignIn() {
 
   const navigate = useNavigate();
 
-  const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+  const toast = 'Login realizado com sucesso!';
 
-  function loginWithGithub() {
-    window.location.assign('https://github.com/login/oauth/authorize?client_id=' + CLIENT_ID);
-  }
-
-  useEffect(() => {
-    async function getUserData() {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const codeParam = urlParams.get('code');
-
-      if (codeParam) {
-        const response = await axios.post('http://localhost:4000/auth/sign-in/github?code=' + codeParam);
-
-        const userData = response.data;
-
-        setUserData(userData);
-
-        toast('Login realizado com sucesso!');
-        navigate('/dashboard');
-      }
-    }
-
-    getUserData();
-  }, []);
+  useGithubLogin(setUserData, toast);
 
   async function submit(event) {
     event.preventDefault();
