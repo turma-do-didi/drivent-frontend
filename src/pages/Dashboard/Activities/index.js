@@ -5,9 +5,11 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import Dates from './Dates';
 import Locations from './Locations';
+import useEvent from '../../../hooks/api/useEvent';
 
 export default function Activities() {
   const dates = useActivityDates();
+  const event = useEvent();
   const [selectedDate, setSelectedDate] = useState(null);
   const [activities, setActivities] = useState([]);
 
@@ -17,6 +19,10 @@ export default function Activities() {
       {dates.datesError ? (
         <BlockedListActivitiesMessageContainer>
           {blockedListActivityMessage(dates.datesError.response.data)}
+        </BlockedListActivitiesMessageContainer>
+      ) : event.event && new Date() > new Date(event.event.endsAt) ? (
+        <BlockedListActivitiesMessageContainer>
+          {blockedListActivityMessage('endEvent')}
         </BlockedListActivitiesMessageContainer>
       ) : (
         <>

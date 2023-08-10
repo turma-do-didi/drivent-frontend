@@ -5,9 +5,15 @@ import RoomCard from './RoomCard';
 import useSaveBooking from '../../hooks/api/useSaveBooking';
 import { toast } from 'react-toastify';
 import useUpdateBooking from '../../hooks/api/useUpdateRoom';
-import { useNavigate } from 'react-router-dom';
 
-export default function RoomListing({ rooms, selectedRoom, setSelectedRoom, changingRoom, setChangingRoom, getBooking }) {
+export default function RoomListing({
+  rooms,
+  selectedRoom,
+  setSelectedRoom,
+  changingRoom,
+  setChangingRoom,
+  getBooking,
+}) {
   const { saveBookingLoading, saveBooking } = useSaveBooking();
   const { updateBookingLoading, updateBooking } = useUpdateBooking();
 
@@ -37,7 +43,7 @@ export default function RoomListing({ rooms, selectedRoom, setSelectedRoom, chan
   }
 
   async function changeRoom() {
-    try  {
+    try {
       await updateBooking({ roomId: selectedRoom.id }, selectedRoom.capacity);
       getBooking();
       setChangingRoom(false);
@@ -54,7 +60,10 @@ export default function RoomListing({ rooms, selectedRoom, setSelectedRoom, chan
       <RoomsContainer>{renderRoomList()}</RoomsContainer>
       {/* FIXME: ESTA PPERMITINDO O USUARIO RESERVAR MULTIPLAS VEZES - SPINT 2 */}
       {selectedRoom ? (
-        <ReserveRoomButton disabled={saveBookingLoading || updateBookingLoading} onClick={changingRoom ? changeRoom : bookRoom}>
+        <ReserveRoomButton
+          disabled={saveBookingLoading || updateBookingLoading}
+          onClick={changingRoom ? changeRoom : bookRoom}
+        >
           RESERVAR QUARTO
         </ReserveRoomButton>
       ) : null}

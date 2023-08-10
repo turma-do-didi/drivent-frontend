@@ -3,20 +3,38 @@ import useToken from '../useToken';
 
 import * as ticketApi from '../../services/ticketApi.js';
 
-export default function useTicketTypes() {
+export function useTicket() {
   const token = useToken();
-  
+
   const {
     data: ticketTypes,
     loading: ticketLoading,
     error: ticketError,
-    act: getTicketTypes
+    act: getTicketTypes,
   } = useAsync(() => ticketApi.getTicketTypes(token));
 
   return {
     ticketTypes,
     ticketLoading,
     ticketError,
-    getTicketTypes
+    getTicketTypes,
+  };
+}
+
+export function useTicketByUserId() {
+  const token = useToken();
+
+  const {
+    data: tickets,
+    loading: ticketLoading,
+    error: ticketError,
+    act: getTicket,
+  } = useAsync(() => ticketApi.getTicket(token));
+
+  return {
+    tickets,
+    ticketLoading,
+    ticketError,
+    getTicket,
   };
 }
