@@ -7,14 +7,14 @@ export function useTicket() {
   const token = useToken();
 
   const {
-    data: tickets,
+    data: ticketTypes,
     loading: ticketLoading,
     error: ticketError,
     act: getTicketTypes,
   } = useAsync(() => ticketApi.getTicketTypes(token));
 
   return {
-    tickets,
+    ticketTypes,
     ticketLoading,
     ticketError,
     getTicketTypes,
