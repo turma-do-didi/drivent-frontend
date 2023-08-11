@@ -18,7 +18,7 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setS
     }
   }, [hotelDetails]);
 
-  const selectCard = () => {
+  function selectCard() {
     setSelectedHotel(hotelDetails);
     if (selectedHotel && hotel.id !== selectedHotel.id) {
       setSelectedRoom(null);
