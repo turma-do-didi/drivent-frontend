@@ -35,6 +35,7 @@ export default function HotelReservation() {
               changingRoom={changingRoom}
               setChangingRoom={setChangingRoom}
               getBooking={getBooking}
+              setSelectedHotel={setSelectedHotel}
             />
           ) : null}
         </>

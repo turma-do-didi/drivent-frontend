@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { getHotelCapacity, getResevedRoom, getRoomOcuppancy, getRoomTypes } from '../../utils/hotelUtils';
 
 export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setSelectedRoom, resume, booking }) {
-  const { hotelDetails } = useHotelDetails(hotel.id);
+  const { hotelDetails, getHotelDetails } = useHotelDetails(hotel.id);
   const [emptyVacancy, setEmptyVacancy] = useState('Carregando');
   const [roomTypes, setRoomTypes] = useState('Carregando');
 
@@ -20,6 +20,7 @@ export default function HotelCard({ hotel, setSelectedHotel, selectedHotel, setS
 
   function selectCard() {
     setSelectedHotel(hotelDetails);
+    getHotelDetails();
     if (selectedHotel && hotel.id !== selectedHotel.id) {
       setSelectedRoom(null);
     }

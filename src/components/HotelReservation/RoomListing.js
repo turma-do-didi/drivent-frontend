@@ -13,6 +13,7 @@ export default function RoomListing({
   changingRoom,
   setChangingRoom,
   getBooking,
+  setSelectedHotel
 }) {
   const { saveBookingLoading, saveBooking } = useSaveBooking();
   const { updateBookingLoading, updateBooking } = useUpdateBooking();
@@ -47,6 +48,8 @@ export default function RoomListing({
       await updateBooking({ roomId: selectedRoom.id }, selectedRoom.capacity);
       getBooking();
       setChangingRoom(false);
+      setSelectedHotel(null);
+      setSelectedRoom(null);
     } catch (err) {
       toast('Não foi possível alterar o quarto!');
     }
